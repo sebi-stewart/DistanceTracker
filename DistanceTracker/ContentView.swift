@@ -8,7 +8,6 @@
 import SwiftUI
 import Combine
 import Darwin
-import ContactsUI
 
 struct ContentView: View {
     @StateObject var deviceLocationService = DeviceLocationService.shared
@@ -19,7 +18,10 @@ struct ContentView: View {
     var target: (lat: Double, lon: Double) = (54.9783, -1.6178)
     
     var body: some View {
-        locationStack
+        VStack(alignment: .leading){
+            locationStack
+            ContactView()
+        }
     }
     
     private var locationStack: some View {

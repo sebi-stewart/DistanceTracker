@@ -10,9 +10,22 @@
 		917F24C12D87100200E0B55D /* DistanceTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DistanceTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		917F250F2D87579D00E0B55D /* Exceptions for "DistanceTracker" folder in "DistanceTracker" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 917F24C02D87100200E0B55D /* DistanceTracker */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		917F24C32D87100200E0B55D /* DistanceTracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				917F250F2D87579D00E0B55D /* Exceptions for "DistanceTracker" folder in "DistanceTracker" target */,
+			);
 			path = DistanceTracker;
 			sourceTree = "<group>";
 		};
@@ -255,6 +268,8 @@
 				DEVELOPMENT_TEAM = 9TT43U476L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DistanceTracker/Info.plist;
+				INFOPLIST_KEY_NSContactsUsageDescription = "Pls give me contacts";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hook it up with that location homie ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -285,6 +300,8 @@
 				DEVELOPMENT_TEAM = 9TT43U476L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DistanceTracker/Info.plist;
+				INFOPLIST_KEY_NSContactsUsageDescription = "Pls give me contacts";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hook it up with that location homie ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
