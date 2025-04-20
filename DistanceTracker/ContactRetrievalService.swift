@@ -13,8 +13,6 @@ struct ContactView: View {
     @State var contacts = [CNContact]()
     @State var selectedUser: Int = 0
     let iconDiameter: CGFloat = 40
-    let measurements = ["kilometer", "miles"]
-    @State var selectedMeasurement: Int = 0
     
     @Environment(\.managedObjectContext) private var viewContext
     @State var isTrusted: Bool? = nil
@@ -23,57 +21,45 @@ struct ContactView: View {
     @StateObject private var coreDataStack = CoreDataStack.shared
     
     var body: some View{
-        NavigationView {
-            VStack{
-                Form {
-                    Section {
-                        Picker(selection: $selectedUser){
-                            ForEach(Array(contacts.enumerated()), id: \.element) { (index, contactDetail) in
-                                Text("\(contactDetail.givenName) \(contactDetail.familyName)")
-                                    .tag(index)
-                            }
-                        } label: {
-                            Text("Partner")
-                        }
-                        .onChange(of: selectedUser) {
-                            setTrustedStatus(trusted: checkTrustedUser())
-                        }
-                    }
-                    Section {
-                        if selectedUser != 0 {
-                            PartnerStack
-                        } else {
-                            printAndReturnObject()
-                        }
-                    }
-                    Section {
-                        Picker("Distance Measurement:", selection: $selectedMeasurement) {
-                            Text("Kilometers").tag(0)
-                            Text("Miles").tag(1)
-                        }
-                    }
-                    if anyTrusted {
-                        Section {
-                            Button (action:untrustAllUsers){
-                                Text("Untrust All Users")
-                            }
-                        }
-                    }
+        Section {
+            Picker(selection: $selectedUser){
+                ForEach(Array(contacts.enumerated()), id: \.element) { (index, contactDetail) in
+                    Text("\(contactDetail.givenName) \(contactDetail.familyName)")
+                        .tag(index)
                 }
-                .onAppear(){
-                    getContactList()
-                }
-                .onChange(of: isTrusted){
-                    if isTrusted != nil && isTrusted!{
-                        anyTrusted = true
-                    } else {
-                        anyTrusted = !coreDataStack.checkUsersTableEmpty()
-                    }
-                }
-                
+            } label: {
+                Text("Partner")
             }
-            .navigationTitle("Contact")
+            .onChange(of: selectedUser) {
+                setTrustedStatus(trusted: checkTrustedUser())
+            }
         }
+        .onAppear(){
+            getContactList()
+            anyTrusted = !coreDataStack.checkUsersTableEmpty()
+        }
+        .onChange(of: isTrusted){
+            if isTrusted != nil && isTrusted!{
+                anyTrusted = true
+            } else {
+                anyTrusted = !coreDataStack.checkUsersTableEmpty()
+            }
+        }
+        Section {
+            if selectedUser != 0 {
+                PartnerStack
+            } else {
+                printAndReturnObject()
+            }
+        }
+        if anyTrusted {
+            Section {
+                Button (action:untrustAllUsers){
+                    Text("Untrust All Users")
+                }
+            }
+        }
+
     }
     
     private var PartnerStack: some View {
