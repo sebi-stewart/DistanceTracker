@@ -11,6 +11,7 @@ import Darwin
 
 struct ContentView: View {
     @StateObject var deviceLocationService = DeviceLocationService.shared
+    @StateObject var contactRetrievalService = ContactRetrievalService.shared
     
     @State var tokens: Set<AnyCancellable> = []
     @State var coordinates: (lat: Double, lon: Double) = (0, 0)
@@ -20,10 +21,14 @@ struct ContentView: View {
     var body: some View {
         VStack(alignment: .leading){
             locationStack
-            Form{
-                ContactView()
-                SettingsView()
-            }
+            formStack
+        }
+    }
+    
+    private var formStack: some View {
+        Form{
+            ContactView()
+            SettingsView()
         }
     }
     
@@ -64,7 +69,7 @@ struct ContentView: View {
         deviceLocationService.deniedLocationAccessPublisher
             .receive(on: DispatchQueue.main)
             .sink {
-                print("Show some kind of alert to the user")
+                print("Show some kind of alert to the user for location access denied")
             }
             .store(in: &tokens)
     }
