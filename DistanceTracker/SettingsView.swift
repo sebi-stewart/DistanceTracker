@@ -10,11 +10,15 @@ import SwiftUI
 enum DistanceMeasurements: Int{
     case kilometers
     case miles
+    case meters
+    case yards
     
     var description: String {
         switch self {
         case .kilometers: return "kilometers"
         case .miles: return "miles"
+        case .meters: return "meters"
+        case .yards: return "yards"
         }
     }
     
@@ -22,6 +26,24 @@ enum DistanceMeasurements: Int{
         switch self {
         case .kilometers: return 1.0
         case .miles: return 0.621371
+        case .meters: return 1000.0
+        case .yards: return 1093.61
+        }
+    }
+    
+    var largerMeasurements: DistanceMeasurements {
+        switch self {
+        case .meters: return .kilometers
+        case .yards: return .miles
+        default: return self
+        }
+    }
+    
+    var smallerMeasurements: DistanceMeasurements {
+        switch self {
+        case .kilometers: return .meters
+        case .miles: return .yards
+        default: return self
         }
     }
 }

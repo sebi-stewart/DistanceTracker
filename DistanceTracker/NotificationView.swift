@@ -13,8 +13,8 @@ struct NotificationView: View{
     @State var dateSetting1: Date = Date.now
     
     @State var scheduledNotifications: [Date] = []
-    @State var distanceNotificationValues: [Int] = []
-    @AppStorage("distanceMeasurement")  var distanceMeasurementInt: Int = 0
+    @State var distanceNotificationValues: [Double] = []
+    @AppStorage("distanceMeasurement")  var distanceMeasurementInt: Int = 0 // Either 0 for km/meters or 1 for mile/yards
         
     let formatter = DateFormatter()
     
@@ -112,45 +112,54 @@ struct NotificationView: View{
 }
 
 struct StepperView: View {
-    @Binding var value: Int
-    var distanceMeasurement: DistanceMeasurements = .kilometers
-    let maxStep = 20037 // This is the antipodal distance of earth, aka furthest point you can be away from one another
+    @Binding var value: Double
+    @State var distanceMeasurement: DistanceMeasurements = .kilometers
+    let maxStep = 20037.0 // This is the antipodal distance of earth, aka furthest point you can be away from one another
 
     func incrementStep() {
         if value == maxStep { value = 0; return}
         var displayValue = convertToSelectedMeasurement()
-        displayValue = Int(pow(10, log10(Double(displayValue+1)).rounded(.up)))
+        displayValue = pow(10, log10(Double(displayValue+1)).rounded(.up))
         value = convertFromSelectedMeasurement(newValue: displayValue)
         if value >= maxStep { value = maxStep }
     }
 
     func decrementStep() {
-        if value <= 0 { value = maxStep; return }
+        if value <= 0 { value = maxStep; return}
         var displayValue = convertToSelectedMeasurement()
-        displayValue =  Int(pow(10, log10(Double(displayValue-1)).rounded(.down)))
+        displayValue =  pow(10, log10(Double(displayValue-1)).rounded(.down))
         value = convertFromSelectedMeasurement(newValue: displayValue)
     }
     
-    func convertToSelectedMeasurement() -> Int {
-        var convertedDistance = Double(value) * distanceMeasurement.conversionFromKM
-        convertedDistance.round()
-        return Int(convertedDistance)
+    func updateDistanceMeasurement() {
+        if value < 3{
+            distanceMeasurement = distanceMeasurement.smallerMeasurements
+        } else if value > 3 {
+            distanceMeasurement = distanceMeasurement.largerMeasurements
+        }
+        
     }
     
-    func convertFromSelectedMeasurement(newValue: Int) -> Int {
-        var convertedDistance = Double(newValue) / distanceMeasurement.conversionFromKM
-        convertedDistance.round()
-        return Int(convertedDistance)
+    func convertToSelectedMeasurement() -> Double {
+        return value * distanceMeasurement.conversionFromKM
+    }
+    
+    func convertFromSelectedMeasurement(newValue: Double) -> Double {
+        return newValue / distanceMeasurement.conversionFromKM
     }
 
 
     var body: some View {
         Stepper {
-            Text("\(convertToSelectedMeasurement()) \(distanceMeasurement.description)")
+            Text("\(Int(convertToSelectedMeasurement().rounded())) \(distanceMeasurement.description)")
         } onIncrement: {
             incrementStep()
+            updateDistanceMeasurement()
         } onDecrement: {
             decrementStep()
+            updateDistanceMeasurement()
+        } .onAppear {
+            updateDistanceMeasurement()
         }
     }
 }
