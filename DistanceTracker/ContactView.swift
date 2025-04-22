@@ -76,19 +76,23 @@ struct ContactView: View {
                     contactRetrievalService.getFormattedContactImage(selected, iconDiameter)
                 }
                 Spacer().frame(width: 12)
-                Text("\(selected.givenName) \(selected.familyName)")
-            }
-            if self.isTrusted != nil {
-                if self.isTrusted! {
-                    Button (action:untrustUser){
-                        Text("Untrust User")
-                    }
-                } else {
-                    Button (action:trustUser){
-                        Text("Trust User")
+                VStack(alignment: .leading){
+                    Text("\(selected.givenName) \(selected.familyName)")
+                    if self.isTrusted != nil {
+                        if self.isTrusted! {
+                            Button (action:untrustUser){
+                                Text("Untrust User")
+                            }
+                        } else {
+                            Button (action:trustUser){
+                                Text("Trust User")
+                                
+                            }
+                        }
                     }
                 }
             }
+            
         }
     }
     
@@ -149,7 +153,6 @@ struct ContactView: View {
                     print(error)
                 }
             } receiveValue: { contacts in
-                print("Received contacts")
                 self.contacts = contacts
             }
             .store(in : &tokens)

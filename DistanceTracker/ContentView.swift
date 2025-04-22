@@ -26,9 +26,12 @@ struct ContentView: View {
     }
     
     private var formStack: some View {
-        Form{
-            ContactView()
-            SettingsView()
+        NavigationView {
+            Form{
+                ContactView()
+                SettingsView()
+                NotificationView()
+            }
         }
     }
     
