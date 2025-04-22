@@ -18,16 +18,12 @@ enum DistanceMeasurements: Int{
         }
     }
     
-    var shortDescription: String {
+    var conversionFromKM: Double {
         switch self {
-        case .kilometers: return "km"
-        case .miles: return "mi"
+        case .kilometers: return 1.0
+        case .miles: return 0.621371
         }
     }
-}
-
-class DistanceObservable: ObservableObject {
-    @Published var description: String = ""
 }
 
 struct SettingsView: View{

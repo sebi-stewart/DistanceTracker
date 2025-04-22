@@ -13,7 +13,8 @@ struct NotificationView: View{
     @State var dateSetting1: Date = Date.now
     
     @State var scheduledNotifications: [Date] = []
-    @State var distanceNotifications: [StepperView] = []
+    @State var distanceNotificationValues: [Int] = []
+    @AppStorage("distanceMeasurement")  var distanceMeasurementInt: Int = 0
         
     let formatter = DateFormatter()
     
@@ -40,23 +41,18 @@ struct NotificationView: View{
                 scheduledNotificationSection
             }
         }
-        .onAppear{
-            print("Updating Measurements - child")
-            for distanceNotification in distanceNotifications {
-                distanceNotification.updateMeasurement()
-            }
-            print("Done Updating - child")
-        }
     }
     
     var distanceNotificationSection: some View {
         Section(header: Text("Distance Notifications")) {
-            ForEach(distanceNotifications.indices, id: \.self) { index in
+            ForEach(distanceNotificationValues.indices, id: \.self) { index in
                 HStack{
-                    distanceNotifications[index]
+                    StepperView(value: $distanceNotificationValues[index],
+                                distanceMeasurement: DistanceMeasurements(rawValue: distanceMeasurementInt)!)
                     Button(action: {
-                        print("Button pressed: \(index+1)")
-                        distanceNotifications.remove(at: index)
+                        print("Button pressed: \(index)")
+                        distanceNotificationValues.remove(at: index)
+                        print(distanceNotificationValues)
                     }) {
                         Image(systemName: "xmark.circle")
                             .foregroundColor(Color.blue)
@@ -64,8 +60,7 @@ struct NotificationView: View{
                 }
             }
             Button(action: {
-                let newStepper = StepperView()
-                distanceNotifications.append(newStepper)
+                distanceNotificationValues.append(0)
             }) {
                 HStack{
                     Image(systemName: "plus.circle")
@@ -73,6 +68,11 @@ struct NotificationView: View{
                     Text("Add Scheduled Notification")
                 }
             }
+        }
+        .onDisappear{
+            print("Printing on main dissapear")
+            print(distanceNotificationValues)
+            print("Done printing on main dissapear")
         }
     }
     
@@ -86,7 +86,7 @@ struct NotificationView: View{
                         displayedComponents: [.hourAndMinute]
                     )
                     Button(action: {
-                        print("Button pressed: \(index+1)")
+                        print("Scheduled Remove Button pressed: \(index)")
                         scheduledNotifications.remove(at: index)
                     }) {
                         Image(systemName: "xmark.circle")
@@ -112,44 +112,45 @@ struct NotificationView: View{
 }
 
 struct StepperView: View {
-    @State private var value = 0
-    @AppStorage("distanceMeasurement") var distanceMeasurementInt: Int = 0
-    @State var measurement: String = DistanceMeasurements(rawValue: UserDefaults.standard.integer(forKey: "distanceMeasurement"))!.description
-    let maxStep = 1000000
-
+    @Binding var value: Int
+    var distanceMeasurement: DistanceMeasurements = .kilometers
+    let maxStep = 20037 // This is the antipodal distance of earth, aka furthest point you can be away from one another
 
     func incrementStep() {
-        value = Int(pow(10, log10(Double(value+1)).rounded(.up)))
-        if value >= maxStep { value = 0 }
+        if value == maxStep { value = 0; return}
+        var displayValue = convertToSelectedMeasurement()
+        displayValue = Int(pow(10, log10(Double(displayValue+1)).rounded(.up)))
+        value = convertFromSelectedMeasurement(newValue: displayValue)
+        if value >= maxStep { value = maxStep }
     }
-
 
     func decrementStep() {
         if value <= 0 { value = maxStep; return }
-        value =  Int(pow(10, log10(Double(value-1)).rounded(.down)))
+        var displayValue = convertToSelectedMeasurement()
+        displayValue =  Int(pow(10, log10(Double(displayValue-1)).rounded(.down)))
+        value = convertFromSelectedMeasurement(newValue: displayValue)
     }
     
-    func updateMeasurement() {
-        print("Should be: " + (DistanceMeasurements(rawValue: UserDefaults.standard.integer(forKey: "distanceMeasurement"))!.description))
-        print("Is: " + DistanceMeasurements(rawValue: distanceMeasurementInt)!.description)
+    func convertToSelectedMeasurement() -> Int {
+        var convertedDistance = Double(value) * distanceMeasurement.conversionFromKM
+        convertedDistance.round()
+        return Int(convertedDistance)
+    }
+    
+    func convertFromSelectedMeasurement(newValue: Int) -> Int {
+        var convertedDistance = Double(newValue) / distanceMeasurement.conversionFromKM
+        convertedDistance.round()
+        return Int(convertedDistance)
     }
 
 
     var body: some View {
         Stepper {
-            Text("\(value) \(DistanceMeasurements(rawValue: distanceMeasurementInt)!.description)")
+            Text("\(convertToSelectedMeasurement()) \(distanceMeasurement.description)")
         } onIncrement: {
             incrementStep()
         } onDecrement: {
             decrementStep()
-        } .onChange(of: distanceMeasurementInt) {
-            print("Changed, updating value \(value)")
-            if distanceMeasurementInt == 0 { // Handle changing from miles to km
-                value = Int(Double(value) * 1.60934)
-            }
-            if distanceMeasurementInt == 1 { // Handle changing from km to miles
-                value = Int(Double(value) * 0.621371)
-            }
         }
     }
 }
