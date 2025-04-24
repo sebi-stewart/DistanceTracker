@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import Foundation
+import MapKit
 
 struct NotificationView: View{
     @State private var showNotificationSettings = UserDefaults.standard.bool(forKey: "notificationsOn")
@@ -15,6 +16,8 @@ struct NotificationView: View{
     @State var scheduledNotifications: [Date] = []
     @State var distanceNotificationValues: [Double] = []
     @AppStorage("distanceMeasurement")  var distanceMeasurementInt: Int = 0 // Either 0 for km/meters or 1 for mile/yards
+    
+//    @FocusState private var isTextFieldFocused: Bool
         
     let formatter = DateFormatter()
     
@@ -35,12 +38,20 @@ struct NotificationView: View{
     }
     
     var notificationPageView: some View {
-        NavigationView {
+        NavigationStack {
             Form{
                 distanceNotificationSection
                 scheduledNotificationSection
             }
         }
+//        .toolbar {
+//            ToolbarItemGroup(placement: .keyboard) {
+//                Spacer()
+//                Button("Done") {
+//                    isTextFieldFocused = false
+//                }
+//            }
+//        }
     }
     
     var distanceNotificationSection: some View {
@@ -48,8 +59,9 @@ struct NotificationView: View{
             ForEach(distanceNotificationValues.indices, id: \.self) { index in
                 HStack{
                     StepperView(value: $distanceNotificationValues[index],
-                                distanceMeasurement: DistanceMeasurements(rawValue: distanceMeasurementInt)!)
-                    Button(action: {
+                                distanceMeasurement: DistanceMeasurements(rawValue: distanceMeasurementInt)!
+                        )
+                        Button(action: {
                         print("Button pressed: \(index)")
                         distanceNotificationValues.remove(at: index)
                         print(distanceNotificationValues)
@@ -69,11 +81,16 @@ struct NotificationView: View{
                 }
             }
         }
-        .onDisappear{
-            print("Printing on main dissapear")
-            print(distanceNotificationValues)
-            print("Done printing on main dissapear")
-        }
+//        .toolbar {
+//            if isTextFieldFocused {
+//                ToolbarItemGroup(placement: .keyboard) {
+//                    Spacer()
+//                    Button("Done") {
+//                        isTextFieldFocused = false
+//                    }
+//                }
+//            }
+//        }
     }
     
     var scheduledNotificationSection: some View {
@@ -111,55 +128,3 @@ struct NotificationView: View{
     }
 }
 
-struct StepperView: View {
-    @Binding var value: Double
-    @State var distanceMeasurement: DistanceMeasurements = .kilometers
-    let maxStep = 20037.0 // This is the antipodal distance of earth, aka furthest point you can be away from one another
-
-    func incrementStep() {
-        if value == maxStep { value = 0; return}
-        var displayValue = convertToSelectedMeasurement()
-        displayValue = pow(10, log10(Double(displayValue+1)).rounded(.up))
-        value = convertFromSelectedMeasurement(newValue: displayValue)
-        if value >= maxStep { value = maxStep }
-    }
-
-    func decrementStep() {
-        if value <= 0 { value = maxStep; return}
-        var displayValue = convertToSelectedMeasurement()
-        displayValue =  pow(10, log10(Double(displayValue-1)).rounded(.down))
-        value = convertFromSelectedMeasurement(newValue: displayValue)
-    }
-    
-    func updateDistanceMeasurement() {
-        if value < 3{
-            distanceMeasurement = distanceMeasurement.smallerMeasurements
-        } else if value > 3 {
-            distanceMeasurement = distanceMeasurement.largerMeasurements
-        }
-        
-    }
-    
-    func convertToSelectedMeasurement() -> Double {
-        return value * distanceMeasurement.conversionFromKM
-    }
-    
-    func convertFromSelectedMeasurement(newValue: Double) -> Double {
-        return newValue / distanceMeasurement.conversionFromKM
-    }
-
-
-    var body: some View {
-        Stepper {
-            Text("\(Int(convertToSelectedMeasurement().rounded())) \(distanceMeasurement.description)")
-        } onIncrement: {
-            incrementStep()
-            updateDistanceMeasurement()
-        } onDecrement: {
-            decrementStep()
-            updateDistanceMeasurement()
-        } .onAppear {
-            updateDistanceMeasurement()
-        }
-    }
-}
