@@ -16,9 +16,7 @@ struct NotificationView: View{
     @State var scheduledNotifications: [Date] = []
     @State var distanceNotificationValues: [Double] = []
     @AppStorage("distanceMeasurement")  var distanceMeasurementInt: Int = 0 // Either 0 for km/meters or 1 for mile/yards
-    
-//    @FocusState private var isTextFieldFocused: Bool
-        
+            
     let formatter = DateFormatter()
     
     var body: some View {
@@ -38,20 +36,12 @@ struct NotificationView: View{
     }
     
     var notificationPageView: some View {
-        NavigationStack {
+        NavigationView {
             Form{
                 distanceNotificationSection
                 scheduledNotificationSection
             }
         }
-//        .toolbar {
-//            ToolbarItemGroup(placement: .keyboard) {
-//                Spacer()
-//                Button("Done") {
-//                    isTextFieldFocused = false
-//                }
-//            }
-//        }
     }
     
     var distanceNotificationSection: some View {
@@ -81,16 +71,6 @@ struct NotificationView: View{
                 }
             }
         }
-//        .toolbar {
-//            if isTextFieldFocused {
-//                ToolbarItemGroup(placement: .keyboard) {
-//                    Spacer()
-//                    Button("Done") {
-//                        isTextFieldFocused = false
-//                    }
-//                }
-//            }
-//        }
     }
     
     var scheduledNotificationSection: some View {
@@ -128,3 +108,8 @@ struct NotificationView: View{
     }
 }
 
+struct NotificationView_Previews: PreviewProvider{
+    static var previews: some View {
+        NotificationView()
+    }
+}

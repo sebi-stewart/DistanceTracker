@@ -8,18 +8,19 @@
 import SwiftUI
 import Foundation
 import MapKit
+import Combine
 
 struct StepperView: View {
     @Binding var value: Double
     @State var distanceMeasurement: DistanceMeasurements = .kilometers
-    @State var textEditNum: Int = 0
     @FocusState var isInputActive: Bool
     
+    @State private var textEditNum: String = "0"
     let maxStep = 20037.0 // This is the antipodal distance of earth, aka furthest point you can be away from one another
+    let textLimit = 10
         
-    func getFormatter() -> DistanceFormatter{
-        let formatter = DistanceFormatter()
-        formatter.measurement = distanceMeasurement.description
+    func getFormatter() -> NumberFormatter{
+        let formatter = NumberFormatter()
         return formatter
     }
 
@@ -38,6 +39,12 @@ struct StepperView: View {
         value = convertFromSelectedMeasurement(newValue: displayValue)
     }
     
+    func limitText(_ upper: Int){
+        if textEditNum.count > upper {
+            textEditNum = String(textEditNum.prefix(upper))
+        }
+    }
+    
     func updateDistanceMeasurement() {
         if value < 3{
             distanceMeasurement = distanceMeasurement.smallerMeasurements
@@ -46,11 +53,17 @@ struct StepperView: View {
         }
     }
     
+    func clampValue(){
+        value = min(max(value, 0), maxStep)
+    }
+    
     func updateDisplayValue(){
-        textEditNum = Int(convertToSelectedMeasurement().rounded())
+        textEditNum = Int(convertToSelectedMeasurement().rounded()).formatted()
     }
     
     func updateAll(){
+        print("Update All Called")
+        clampValue()
         updateDistanceMeasurement()
         updateDisplayValue()
     }
@@ -62,27 +75,85 @@ struct StepperView: View {
     func convertFromSelectedMeasurement(newValue: Double) -> Double {
         return newValue / distanceMeasurement.conversionFromKM
     }
+    
+    func extractFirstDecimal(from input: String) -> Double {
+        // Match the first sequence of digits, possibly with commas in it
+        var commaCount: Int = 0
+        var periodCount: Int = 0
+        var isCommaFirst: Bool? = nil
+        
+        for (_, char) in input.enumerated() {
+            if char == ","{
+                commaCount += 1
+                if isCommaFirst == nil { isCommaFirst = true }
+            } else if char == "." {
+                periodCount += 1
+                if isCommaFirst == nil { isCommaFirst = false }
+            }
+            
+        }
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        
+        let usLocale = Locale(identifier: "en_US")
+        let frLocale = Locale(identifier: "fr_FR")
+        
+        if commaCount == 0 && periodCount == 0 {
+            return formatter.number(from: input)?.doubleValue ?? 0.0
+        }
+        
+        if commaCount != 0 && periodCount != 0 {
+            let charToRemove = isCommaFirst! ? "," : "."
+            let parsedInput = input.replacingOccurrences(of: charToRemove, with: "")
+            formatter.locale = isCommaFirst! ? usLocale : frLocale
+            return formatter.number(from: parsedInput)?.doubleValue ?? 0.0
+        }
+        
+        let userLocale: Locale = .current
+        let groupingSeparator = userLocale.groupingSeparator ?? " "
+        let parsedInput = input.replacingOccurrences(of: groupingSeparator, with: "")
+        formatter.locale = userLocale
+        return formatter.number(from: parsedInput)?.doubleValue ?? 0.0
+    }
 
 
     var body: some View {
         HStack{
-            TextField("Value", value: $textEditNum, formatter: getFormatter(), onCommit: {
-                value = convertFromSelectedMeasurement(newValue: Double(textEditNum))
-                value = min(max(value, 0), maxStep)
-            })
-            .keyboardType(.numberPad)
-            .focused($isInputActive)
-            .frame(minWidth: 80)
-            .toolbar {
-                if isInputActive {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
-                        Button("Done") {
-                            isInputActive = false
+            HStack(spacing: 1){
+                TextField("Value", text: $textEditNum)
+                .onAppear { updateAll() }
+                .onChange(of: value) { updateAll() }
+                .onReceive(Just(textEditNum)) { _ in limitText(textLimit)}
+                .focused($isInputActive)
+                .keyboardType(.numberPad)
+                .toolbar {
+                    if isInputActive {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button("Done") {
+                                isInputActive = false
+                                print("Done Clicked - \(textEditNum)")
+                                let extractedNum = extractFirstDecimal(from: textEditNum)
+                                print("Extracted Number - \(extractedNum)")
+                                value = convertFromSelectedMeasurement(newValue: extractedNum)
+                                print("Done Clicked")
+                            }
                         }
                     }
                 }
+                .background(
+                    HStack(spacing: 2) {
+                        Text(String(textEditNum))
+                            .hidden()
+                        Text(distanceMeasurement.description)
+                        Spacer()
+                    }
+                )
+                
+//                Spacer()
             }
+            Spacer()
             
             Stepper {
 //                Text("\(Int(convertToSelectedMeasurement().rounded())) \(distanceMeasurement.description)")
@@ -91,45 +162,8 @@ struct StepperView: View {
             } onDecrement: {
                 decrementStep()
             }
+            .fixedSize()
             
-        } .onAppear {
-            updateAll()
-        } .onChange(of: value) {
-            updateAll()
         }
-    }
-}
-
-class DistanceFormatter: Formatter {
-    var measurement: String = "undefined"
-    
-    override func string(for obj: Any?) -> String?{
-        guard obj != nil else {return "Nil Object"}
-        guard obj is Int else {return "Not Int Object"}
-        return "\((obj as! Int).formatted()) \(measurement)"
-    }
-    
-    func extractFirstInteger(from input: String) -> Int {
-        // Match the first sequence of digits, possibly with commas in it
-        let pattern = #"(\d[\d,\s]*)"#
-        
-        if let match = input.range(of: pattern, options: .regularExpression) {
-            let matchedString = String(input[match])
-            let digitsOnly = matchedString.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-            return Int(digitsOnly) ?? 0
-        }
-        
-        // Fallback to 0 if no match
-        return 0
-    }
-
-    override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
-        
-        guard !string.isEmpty else { return false }
-        
-        let number = extractFirstInteger(from: string)
-//        print("in getObjectValue(), string = \(trimmedString), value = \(number)")
-        obj?.pointee = number as AnyObject
-        return true
     }
 }

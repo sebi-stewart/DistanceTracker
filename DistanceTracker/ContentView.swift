@@ -20,7 +20,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            locationStack
+//            locationStack
             formStack
         }
     }
