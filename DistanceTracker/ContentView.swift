@@ -12,16 +12,23 @@ import Darwin
 struct ContentView: View {
     @StateObject var deviceLocationService = DeviceLocationService.shared
     @StateObject var contactRetrievalService = ContactRetrievalService.shared
+    @StateObject var remoteLocationService = LocationService.shared
     
     @State var tokens: Set<AnyCancellable> = []
-    @State var coordinates: (lat: Double, lon: Double) = (0, 0)
+    @State var coordinates: (lat: Double, lon: Double) = (0, 0) 
     @State var distance: Double = 0
+    
+    @AppStorage("loggedIn") private var loggedIn = false
+
     var target: (lat: Double, lon: Double) = (54.9783, -1.6178)
     
     var body: some View {
         VStack(alignment: .leading){
-//            locationStack
-            formStack
+            if loggedIn{
+                locationStack
+            }
+//            formStack
+            LoginPageView()
         }
     }
     
@@ -44,12 +51,14 @@ struct ContentView: View {
                 .font(.title)
             Text("Longitude: \(coordinates.lon)")
                 .font(.title)
-            Text("Distance: \((distance * 10).rounded() / 10) km")
+            Text("Distance: \((distance * 1000).rounded() / 1000) km")
         }
         .padding()
         .onAppear {
+            print("Just appeared")
             observeCoordinateUpates()
             observeLocationAccessDenied()
+            observeDistanceUpdates()
             deviceLocationService.requestLocationUpdates()
         }
     }
@@ -62,8 +71,9 @@ struct ContentView: View {
                     print(error)
                 }
             } receiveValue: { coordinates in
+                print("Received new coordinates: \(coordinates)")
                 self.coordinates = (coordinates.latitude, coordinates.longitude)
-                self.distance = updateDistanceToTarget()
+                remoteLocationService.retrievePartnerLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)
             }
             .store(in : &tokens)
     }
@@ -77,15 +87,18 @@ struct ContentView: View {
             .store(in: &tokens)
     }
     
-    func updateDistanceToTarget() -> Double{
-        let radius: Double = 6371.0 //km
-        let pi = Double.pi
-        
-        let a = (0.5 - cos((target.lat - coordinates.lat) * pi) / 2
-                     + cos(coordinates.lat * pi) * cos(target.lat * pi) *
-                 (1 - cos((target.lon - coordinates.lon) * pi)) / 2)
-        return (2 * radius * asin(sqrt(a)))
-        
+    func observeDistanceUpdates() {
+        remoteLocationService.distancePublisher
+            .receive(on: DispatchQueue.main)
+            .sink {completion in
+                if case .failure(let error) = completion {
+                    print("Received error on distance update: \(error)")
+                }
+            } receiveValue: { distance in
+                self.distance = distance
+                print("Distance updates to: \(distance)")
+            }
+            .store(in: &tokens)
     }
 }
 
