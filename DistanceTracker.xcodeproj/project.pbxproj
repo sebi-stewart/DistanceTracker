@@ -269,7 +269,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DistanceTracker/Info.plist;
-				INFOPLIST_KEY_NSContactsUsageDescription = "Pls give me contacts";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Can i get it please";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hook it up with that location homie ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -301,7 +301,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DistanceTracker/Info.plist;
-				INFOPLIST_KEY_NSContactsUsageDescription = "Pls give me contacts";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Can i get it please";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hook it up with that location homie ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
