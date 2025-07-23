@@ -49,7 +49,7 @@ enum DistanceMeasurements: Int{
 }
 
 struct SettingsView: View{
-    @State var selectedMeasurement: Int = UserDefaults.standard.integer(forKey: "distanceMeasurement")
+    @AppStorage("distanceMeasurement") var selectedMeasurement: Int = 0
     
     var body: some View {
         Section(header: Text("Settings")) {
@@ -57,13 +57,6 @@ struct SettingsView: View{
                 Text("Kilometers").tag(0)
                 Text("Miles").tag(1)
             }
-            .onChange(of: selectedMeasurement){
-                UserDefaults.standard.set(selectedMeasurement, forKey: "distanceMeasurement")
-            }
-            .onAppear{
-                selectedMeasurement = UserDefaults.standard.integer(forKey: "distanceMeasurement")
-            }
-            
         }
     }
 }

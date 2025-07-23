@@ -9,12 +9,14 @@ import Foundation
 import MapKit
 
 struct NotificationView: View{
-    @State private var showNotificationSettings = UserDefaults.standard.bool(forKey: "notificationsOn")
+    @AppStorage("notificationsOn") private var showNotificationSettings = false
     @State var notSetting1: Int = 0
     @State var dateSetting1: Date = Date.now
     
-    @State var scheduledNotifications: [Date] = []
-    @State var distanceNotificationValues: [Double] = []
+    @StateObject var notificationService = NotificationService.shared
+    
+    @AppStorage("distanceNotifications") var distanceNotificationValues: [Double] = []
+    @AppStorage("scheduledNotifications") var scheduledNotifications: [Date] = []
     @AppStorage("distanceMeasurement")  var distanceMeasurementInt: Int = 0 // Either 0 for km/meters or 1 for mile/yards
             
     let formatter = DateFormatter()
@@ -27,11 +29,11 @@ struct NotificationView: View{
             }
         }
         .onAppear{
-            showNotificationSettings = UserDefaults.standard.bool(forKey: "notificationsOn")
             formatter.dateFormat = "HH:mm"
         }
-        .onChange(of: showNotificationSettings){
-            UserDefaults.standard.set(showNotificationSettings, forKey: "notificationsOn")
+        .onChange(of: scheduledNotifications){
+            print("Scheduled notifications - onChange")
+            notificationService.scheduleNotifications()
         }
     }
     
