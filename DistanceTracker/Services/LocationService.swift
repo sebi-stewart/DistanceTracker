@@ -25,6 +25,7 @@ class LocationService: NSObject, ObservableObject {
     var distancePublisher = PassthroughSubject<Double, Error>()
     
     func retrievePartnerLocation(latitude: Double, longitude: Double) {
+        print("Retrieving partners location with \(latitude) : \(longitude)")
         previousDistanceRequest?.cancel()
         let loginBody = ["latitude": latitude, "longitude": longitude] as Dictionary<String, Double>
         

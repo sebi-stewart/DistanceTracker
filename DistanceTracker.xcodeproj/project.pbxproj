@@ -6,8 +6,41 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		91CE0D0D2E319B510060CCE9 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91CE0D0C2E319B510060CCE9 /* WidgetKit.framework */; };
+		91CE0D0F2E319B510060CCE9 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91CE0D0E2E319B510060CCE9 /* SwiftUI.framework */; };
+		91CE0D202E319B530060CCE9 /* DistanceTrackingWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 91CE0D0A2E319B510060CCE9 /* DistanceTrackingWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		91CE0D1E2E319B530060CCE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 917F24B92D87100200E0B55D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91CE0D092E319B510060CCE9;
+			remoteInfo = DistanceTrackingWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		91CE0D252E319B530060CCE9 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				91CE0D202E319B530060CCE9 /* DistanceTrackingWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		917F24C12D87100200E0B55D /* DistanceTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DistanceTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		91CE0D0A2E319B510060CCE9 /* DistanceTrackingWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DistanceTrackingWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		91CE0D0C2E319B510060CCE9 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		91CE0D0E2E319B510060CCE9 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -18,6 +51,21 @@
 			);
 			target = 917F24C02D87100200E0B55D /* DistanceTracker */;
 		};
+		91CE0D242E319B530060CCE9 /* Exceptions for "DistanceTrackingWidget" folder in "DistanceTrackingWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 91CE0D092E319B510060CCE9 /* DistanceTrackingWidgetExtension */;
+		};
+		91CE0D272E319DA70060CCE9 /* Exceptions for "DistanceTracker" folder in "DistanceTrackingWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DeviceLocationService.swift,
+				Services/LocationService.swift,
+			);
+			target = 91CE0D092E319B510060CCE9 /* DistanceTrackingWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -25,8 +73,17 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				917F250F2D87579D00E0B55D /* Exceptions for "DistanceTracker" folder in "DistanceTracker" target */,
+				91CE0D272E319DA70060CCE9 /* Exceptions for "DistanceTracker" folder in "DistanceTrackingWidgetExtension" target */,
 			);
 			path = DistanceTracker;
+			sourceTree = "<group>";
+		};
+		91CE0D102E319B510060CCE9 /* DistanceTrackingWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				91CE0D242E319B530060CCE9 /* Exceptions for "DistanceTrackingWidget" folder in "DistanceTrackingWidgetExtension" target */,
+			);
+			path = DistanceTrackingWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +96,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91CE0D072E319B510060CCE9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91CE0D0F2E319B510060CCE9 /* SwiftUI.framework in Frameworks */,
+				91CE0D0D2E319B510060CCE9 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -46,6 +112,8 @@
 			isa = PBXGroup;
 			children = (
 				917F24C32D87100200E0B55D /* DistanceTracker */,
+				91CE0D102E319B510060CCE9 /* DistanceTrackingWidget */,
+				91CE0D0B2E319B510060CCE9 /* Frameworks */,
 				917F24C22D87100200E0B55D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,8 +122,18 @@
 			isa = PBXGroup;
 			children = (
 				917F24C12D87100200E0B55D /* DistanceTracker.app */,
+				91CE0D0A2E319B510060CCE9 /* DistanceTrackingWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		91CE0D0B2E319B510060CCE9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				91CE0D0C2E319B510060CCE9 /* WidgetKit.framework */,
+				91CE0D0E2E319B510060CCE9 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -68,10 +146,12 @@
 				917F24BD2D87100200E0B55D /* Sources */,
 				917F24BE2D87100200E0B55D /* Frameworks */,
 				917F24BF2D87100200E0B55D /* Resources */,
+				91CE0D252E319B530060CCE9 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				91CE0D1F2E319B530060CCE9 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				917F24C32D87100200E0B55D /* DistanceTracker */,
@@ -82,6 +162,28 @@
 			productName = DistanceTracker;
 			productReference = 917F24C12D87100200E0B55D /* DistanceTracker.app */;
 			productType = "com.apple.product-type.application";
+		};
+		91CE0D092E319B510060CCE9 /* DistanceTrackingWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 91CE0D212E319B530060CCE9 /* Build configuration list for PBXNativeTarget "DistanceTrackingWidgetExtension" */;
+			buildPhases = (
+				91CE0D062E319B510060CCE9 /* Sources */,
+				91CE0D072E319B510060CCE9 /* Frameworks */,
+				91CE0D082E319B510060CCE9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				91CE0D102E319B510060CCE9 /* DistanceTrackingWidget */,
+			);
+			name = DistanceTrackingWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = DistanceTrackingWidgetExtension;
+			productReference = 91CE0D0A2E319B510060CCE9 /* DistanceTrackingWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -94,6 +196,9 @@
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					917F24C02D87100200E0B55D = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					91CE0D092E319B510060CCE9 = {
 						CreatedOnToolsVersion = 16.2;
 					};
 				};
@@ -113,12 +218,20 @@
 			projectRoot = "";
 			targets = (
 				917F24C02D87100200E0B55D /* DistanceTracker */,
+				91CE0D092E319B510060CCE9 /* DistanceTrackingWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		917F24BF2D87100200E0B55D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91CE0D082E319B510060CCE9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +248,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		91CE0D062E319B510060CCE9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		91CE0D1F2E319B530060CCE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91CE0D092E319B510060CCE9 /* DistanceTrackingWidgetExtension */;
+			targetProxy = 91CE0D1E2E319B530060CCE9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		917F24CD2D87100300E0B55D /* Debug */ = {
@@ -264,13 +392,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"DistanceTracker/Preview Content\"";
 				DEVELOPMENT_TEAM = 9TT43U476L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DistanceTracker/Info.plist;
 				INFOPLIST_KEY_NSContactsUsageDescription = "Can i get it please";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hook it up with that location homie ";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow to access the location both - app level";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow to access the location always - app level";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow to access the location when in use - app level";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -296,13 +425,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"DistanceTracker/Preview Content\"";
 				DEVELOPMENT_TEAM = 9TT43U476L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DistanceTracker/Info.plist;
 				INFOPLIST_KEY_NSContactsUsageDescription = "Can i get it please";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hook it up with that location homie ";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow to access the location both - app level";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow to access the location always - app level";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow to access the location when in use - app level";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -315,6 +445,66 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "sebby-webby.DistanceTracker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		91CE0D222E319B530060CCE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9TT43U476L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DistanceTrackingWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DistanceTrackingWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow to access the location both - widget level";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow to access the location always - widget level";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow to access the location when in use - widget level";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "sebby-webby.DistanceTracker.DistanceTrackingWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		91CE0D232E319B530060CCE9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9TT43U476L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DistanceTrackingWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DistanceTrackingWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow to access the location both - widget level";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Allow to access the location always - widget level";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow to access the location when in use - widget level";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "sebby-webby.DistanceTracker.DistanceTrackingWidget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -338,6 +528,15 @@
 			buildConfigurations = (
 				917F24D02D87100300E0B55D /* Debug */,
 				917F24D12D87100300E0B55D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		91CE0D212E319B530060CCE9 /* Build configuration list for PBXNativeTarget "DistanceTrackingWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				91CE0D222E319B530060CCE9 /* Debug */,
+				91CE0D232E319B530060CCE9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

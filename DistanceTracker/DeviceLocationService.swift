@@ -30,15 +30,19 @@ class DeviceLocationService: NSObject, CLLocationManagerDelegate, ObservableObje
     }()
     
     func requestLocationUpdates() {
+        print("Reuqesting location updates")
         switch locationManager.authorizationStatus {
             
         case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
+            print("Reuqesting always auth")
+            locationManager.requestAlwaysAuthorization()
             
-        case .authorizedWhenInUse, .authorizedAlways:
+        case .authorizedWhenInUse, .authorizedAlways, .authorized:
+            print("Authorized")
             locationManager.startUpdatingLocation()
             
         default:
+            print("Something else \(locationManager.authorizationStatus)")
             deniedLocationAccessPublisher.send()
         }
     }
